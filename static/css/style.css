@@ -1,0 +1,98 @@
+* {
+  font-family: Helvetica, sans-serif;
+  font-size: 16px;
+  margin: 0; padding: 0;
+}
+
+body {
+  overflow: hidden;
+}
+
+.app-wrapper {
+  width: 100vw; height: 100vh;
+  position: relative;
+}
+
+#map {
+  width: 100%; height: 110%;
+}
+
+#sidebar {
+  position: absolute;
+  top: 0px; left: 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  width: 390px; height: 100%;
+  border-right: 1px solid #C4C4C4;
+  background-color: #FFFFFF;
+}
+
+.short-inputs-container {
+  display: flex;
+}
+
+.short-input {
+  margin-right: 10px;
+  cursor: pointer;
+} .regions-short-input:last-child,
+  .objects-short-input:last-child,
+  .coordinates-short-input:last-child {
+  margin-right: 0;
+}
+.coordinates-short-input {
+  cursor: auto;
+}
+
+.span-button-container {
+  margin-bottom: 10px;
+}
+
+.span-button {
+  font-size: 18px;
+  cursor: pointer;
+} .span-button:hover {
+  text-decoration: underline;
+}
+
+#toolbar {
+  width: 360px; height: auto;
+  padding: 15px 0;
+
+}
+
+#toolbar select,
+#toolbar input{
+  box-sizing: border-box;
+  width: 100%; height: 40px;
+  border: none;
+  margin-bottom: 10px; padding: 0 10px;
+  background-color: #C4C4C4;
+  transition: 0.2s;
+} #toolbar select:hover,
+  #toolbar input:hover{
+  background-color: #DADADA;
+} #toolbar select:focus,
+  #toolbar input:focus {
+  outline: none;
+}
+
+.regions-container {
+  margin-bottom: 50px;
+}
+
+#navbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%; height: 60px;
+  padding: 0 15px;
+}
+
+#navbar .span-button {
+  margin-bottom: 0;
+  font-size: 24px;
+}
