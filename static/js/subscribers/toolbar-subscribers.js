@@ -126,6 +126,11 @@ store.subscribe(['SET-NEW-CATEGORY-ICON'], (state) => {
     document.getElementById('new-category-icon-name').innerHTML = state.toolbar.newCategoryIcon
 })
 
+store.subscribe(['CREATE-CATEGORY'], (state) => {
+    document.getElementById('new-category-name').value = ''
+    document.getElementById('new-category-icon-name').innerHTML = 'Иконка'
+})
+
 store.subscribe(['SET-OBJECTS-TAB'], (state) => {
     switch(state.toolbar.objectsTab) {
         case 'OBJECTS': {

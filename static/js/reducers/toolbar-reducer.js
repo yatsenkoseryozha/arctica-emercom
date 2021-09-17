@@ -114,6 +114,7 @@ const updateObjectDisplayActionCreator = () => ({ type: 'UPDATE-OBJECT-DISPLAY' 
 const setToolbarTabActionCreator = (tab) => ({ type: 'SET-TOOLBAR-TAB', tab })
 const setCategoriesTabActionCreator = (tab) => ({ type: 'SET-CATEGORIES-TAB', tab })
 const setNewCategoryIconActionCreator = (filename) => ({ type: 'SET-NEW-CATEGORY-ICON', filename })
+const createCategoryActionCreator = () => ({ type: 'CREATE-CATEGORY' })
 const setObjectsTabActionCreator = (tab) => ({ type: 'SET-OBJECTS-TAB', tab })
 const createObjectActionCreator = () => ({ type: 'CREATE-OBJECT' })
 const deleteObjectActionCreator = () => ({ type: 'DELETE-OBJECT' })

@@ -1,10 +1,22 @@
 require('dotenv').config()
 
 const express = require('express')
+const multer = require('multer')
 const mongoose = require('mongoose')
 
 const Category = require('./models/Category')
 const ArcticObject = require('./models/Object')
+
+const categoryIconStorage = multer.diskStorage({
+  destination: (request, file, cb) => {
+    cb(null, __dirname + '/static/img/categories')
+  },
+  filename: (request, file, cb) => {
+    cb(null, request.category_id + '.png')
+  }
+})
+
+const uploadCategoryIcon = multer({ storage: categoryIconStorage })
 
 const app = express()
 
@@ -44,6 +56,25 @@ app.get('/get-objects', async (request, response) => {
     return response.status(200).json({ objects })
   } catch (error) {
     console.log(error)
+  }
+})
+
+const createCategory = async (request, response, next) => {
+  const category = new Category({})
+  await category.save()
+  request.category_id = category._id
+  next()
+}
+
+app.post('/create-category', [createCategory, uploadCategoryIcon.single('icon')], async (request, response) => {
+  try {
+    await Category.updateOne({ _id: request.category_id }, {
+      $set: { name: request.body.name, icon: `../img/categories/${request.file.filename}` }
+    })
+    const category = await Category.findOne({ _id: request.category_id })
+    return response.status(200).json({ message: "Категория успешно создана!", category })
+  } catch (e) {
+    console.log(e)
   }
 })
 
