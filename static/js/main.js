@@ -1,5 +1,5 @@
 const start = async () => {
-    store.disptach(initMapActionCreator())    
+    store.disptach(initMapActionCreator())
 
     getCategories()
 }
@@ -47,6 +47,13 @@ const setCurrentObject = (object) => store.disptach(setCurrentObjectActionCreato
 const updateObjectDisplay = () => store.disptach(updateObjectDisplayActionCreator())
 
 const setToolbarTab = (tab) => store.disptach(setToolbarTabActionCreator(tab))
+
+const setCategoriesTab = (tab) => store.disptach(setCategoriesTabActionCreator(tab))
+
+const setNewCategoryIcon = () => {
+    let filename = document.getElementById('new-category-icon').value.replace(/C:\\fakepath\\/, '')
+    store.disptach(setNewCategoryIconActionCreator(filename))
+}
 
 const setObjectsTab = (tab) => store.disptach(setObjectsTabActionCreator(tab))
 

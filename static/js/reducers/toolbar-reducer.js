@@ -3,6 +3,8 @@ const toolbarInitialState = {
     currentCategory: {},
     currentObject: {},
     toolbarTab: 'MAP-TOOLBAR',
+    categoriesTab: 'CATEGORIES',
+    newCategoryIcon: undefined,
     objectsTab: undefined
 }
 
@@ -76,6 +78,16 @@ const toolbarReducer = (state = toolbarInitialState, action) => {
 
             return state
         }
+        case 'SET-CATEGORIES-TAB': {
+            state.categoriesTab = action.tab
+
+            return state
+        }
+        case 'SET-NEW-CATEGORY-ICON': {
+            state.newCategoryIcon = action.filename
+
+            return state
+        }
         case 'SET-OBJECTS-TAB': {
             state.objectsTab = action.tab
 
@@ -100,6 +112,8 @@ const setObjectsActionCreator = (objects) => ({ type: 'SET-OBJECTS', objects })
 const setCurrentObjectActionCreator = (name) => ({ type: 'SET-CURRENT-OBJECT', name })
 const updateObjectDisplayActionCreator = () => ({ type: 'UPDATE-OBJECT-DISPLAY' }) 
 const setToolbarTabActionCreator = (tab) => ({ type: 'SET-TOOLBAR-TAB', tab })
+const setCategoriesTabActionCreator = (tab) => ({ type: 'SET-CATEGORIES-TAB', tab })
+const setNewCategoryIconActionCreator = (filename) => ({ type: 'SET-NEW-CATEGORY-ICON', filename })
 const setObjectsTabActionCreator = (tab) => ({ type: 'SET-OBJECTS-TAB', tab })
 const createObjectActionCreator = () => ({ type: 'CREATE-OBJECT' })
 const deleteObjectActionCreator = () => ({ type: 'DELETE-OBJECT' })

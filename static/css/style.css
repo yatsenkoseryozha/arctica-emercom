@@ -30,6 +30,15 @@ body {
   background-color: #FFFFFF;
 }
 
+#toolbar {
+  width: 360px; height: auto;
+  padding: 15px 0;
+}
+
+.map-regions-container {
+  margin-bottom: 50px;
+}
+
 .short-inputs-container {
   display: flex;
 }
@@ -57,14 +66,9 @@ body {
   text-decoration: underline;
 }
 
-#toolbar {
-  width: 360px; height: auto;
-  padding: 15px 0;
-
-}
-
 #toolbar select,
-#toolbar input{
+#toolbar input,
+#new-category-icon-container {
   box-sizing: border-box;
   width: 100%; height: 40px;
   border: none;
@@ -72,15 +76,18 @@ body {
   background-color: #C4C4C4;
   transition: 0.2s;
 } #toolbar select:hover,
-  #toolbar input:hover{
+  #toolbar input:hover,
+  #new-category-icon-container:hover {
   background-color: #DADADA;
 } #toolbar select:focus,
   #toolbar input:focus {
   outline: none;
 }
 
-.regions-container {
-  margin-bottom: 50px;
+#new-category-icon-container span {
+  display: flex;
+  align-items: center;
+  width: auto; height: 100%;
 }
 
 #navbar {
