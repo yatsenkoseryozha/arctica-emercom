@@ -16,6 +16,8 @@ const getCategories = async () => {
     let data = await response.json()
 
     store.disptach(setCategoriesActionCreator(data.categories))
+
+    setCategoriesTab('CATEGORIES')
 }
 
 const setCurrentCategory = async (category) => {
@@ -53,6 +55,24 @@ const setCategoriesTab = (tab) => store.disptach(setCategoriesTabActionCreator(t
 const setNewCategoryIcon = () => {
     let filename = document.getElementById('new-category-icon').value.replace(/C:\\fakepath\\/, '')
     store.disptach(setNewCategoryIconActionCreator(filename))
+}
+
+const createCategory = async () => {
+    var formData = new FormData();
+    formData.append('name', document.getElementById('new-category-name').value)
+    formData.append('icon', document.getElementById('new-category-icon').files[0])
+
+    let response = await fetch('/create-category', {
+        method: 'POST',
+        body: formData
+    })
+    let data = await response.json()
+    console.log(data.category)
+
+    await getCategories()
+    setCurrentCategory(data.category.name)
+
+    store.disptach(createCategoryActionCreator())
 }
 
 const setObjectsTab = (tab) => store.disptach(setObjectsTabActionCreator(tab))
