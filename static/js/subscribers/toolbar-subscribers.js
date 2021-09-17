@@ -19,6 +19,8 @@ store.subscribe(['SET-CURRENT-CATEGORY'], (state) => {
         if (options[i].value === state.toolbar.currentCategory.name)
             options[i].selected = true
     }
+
+    document.getElementById('delete-category-button').removeAttribute('disabled')
 })
 
 store.subscribe(['SET-OBJECTS', 'DELETE-OBJECT'], (state) => {
@@ -90,6 +92,38 @@ store.subscribe(['SET-TOOLBAR-TAB'], (state) => {
         }
         default: break
     }
+})
+
+store.subscribe(['SET-CATEGORIES-TAB'], (state) => {
+    switch(state.toolbar.categoriesTab) {
+        case 'CATEGORIES': {
+            document.getElementById('db-categories-list').style.display = 'block'
+            document.getElementById('new-category-name').style.display = 'none'
+            document.getElementById('new-category-icon-container').style.display = 'none'
+            document.getElementById('create-category-button').style.display = 'none'
+            document.getElementById('delete-category-button').style.display = 'block'
+            document.getElementById('db-categories-tab-button').setAttribute('onclick', 'setCategoriesTab("NEW-CATEGORY")')
+            document.getElementById('db-categories-tab-button').innerHTML = 'создать новую'
+            document.querySelector('.db-objects-container').style.display = 'block'
+            break
+        }
+        case 'NEW-CATEGORY': {
+            document.getElementById('db-categories-list').style.display = 'none'
+            document.getElementById('new-category-name').style.display = 'block'
+            document.getElementById('new-category-icon-container').style.display = 'block'
+            document.getElementById('create-category-button').style.display = 'block'
+            document.getElementById('delete-category-button').style.display = 'none'
+            document.getElementById('db-categories-tab-button').setAttribute('onclick', 'setCategoriesTab("CATEGORIES")')
+            document.getElementById('db-categories-tab-button').innerHTML = 'выбрать существующую'
+            document.querySelector('.db-objects-container').style.display = 'none'
+            break
+        }
+        default: break
+    }
+})
+
+store.subscribe(['SET-NEW-CATEGORY-ICON'], (state) => {
+    document.getElementById('new-category-icon-name').innerHTML = state.toolbar.newCategoryIcon
 })
 
 store.subscribe(['SET-OBJECTS-TAB'], (state) => {
