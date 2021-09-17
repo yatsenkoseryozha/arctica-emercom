@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=YMAP_API_KEY&lang=ru_RU" charset="utf-8"></script>
+    <script src="https://github.com/yatsenkoseryozha/simple-store/releases/download/v1.0/simple-store.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <title>ARCTICA EMERCOM</title>
+  </head>
+  <body>
+    <div class="app-wrapper">
+      <div id="map"></div>
+      <div id="sidebar">
+        <div id="toolbar">
+            <div id="map-toolbar">
+              <div class="regions-container short-inputs-container">
+                <input class="short-input regions-short-input" id="update-regions-display-button" type="submit" value="Регионы России" onclick="updateRegionsDisplay()">
+                <input class="short-input regions-short-input" id="update-arctic-display-button" type="submit" value="Арктическая зона России" onclick="updateArcticDisplay()">
+              </div>
+              <div class="objects-container">
+                <select class="categories-list" id="map-categories-list" disabled onchange="setCurrentCategory(this.options[this.selectedIndex].value)">
+                  <option style="display:none">Выберите категорию</option>
+                  <optgroup class="categories-options-group" id="map-categories-options-group" label="Выберите категорию"></optgroup>
+                </select>
+                <select class="objects-list" id="map-objects-list" disabled onchange="setCurrentObject(this.options[this.selectedIndex].value)">
+                  <option style="display:none">Выберите объект</option>
+                  <optgroup class="objects-options-group" id="map-objects-options-group" label="Выберите объект"></optgroup>
+                </select>
+                <div class="short-inputs-container">
+                  <input class="short-input objects-short-input" id="update-category-display-button" type="submit" value="Показать все" disabled onclick="updateCategoryDisplay()" />
+                  <input class="short-input objects-short-input" id="update-object-display-button" type="submit" value="Показать" disabled onclick="updateObjectDisplay()" />
+                </div>
+              </div>
+            </div>
+            <div id="db-toolbar" style="display:none">
+              <select class="categories-list" id="db-categories-list" disabled onchange="setCurrentCategory(this.options[this.selectedIndex].value)">
+                <option style="display:none">Выберите категорию</option>
+                <optgroup class="categories-options-group" id="db-categories-options-group" label="Выберите категорию"></optgroup>
+              </select>
+              <select class="objects-list" id="db-objects-list" style="display:none" onchange="setCurrentObject(this.options[this.selectedIndex].value)">
+                <option style="display:none">Выберите объект</option>
+                <optgroup class="objects-options-group" id="db-objects-options-group" label="Выберите объект"></optgroup>
+              </select>
+              <input id="new-object-name" type="text" placeholder="Название" style="display:none" />
+              <input id="new-object-website" type="text" placeholder="Веб-сайт" style="display:none" />
+              <div id="new-object-coordinates" class="short-inputs-container" style="display:none" >
+                <input id="new-object-longitude" class="short-input coordinates-short-input" type="text" placeholder="Долгота" />
+                <input id="new-object-latitude" class="short-input coordinates-short-input" type="text" placeholder="Широта" />
+              </div>
+              <input id="create-object-button" type="submit" value="Создать" style="display:none" onclick="createObject()" />
+              <div class="span-button-container">
+                <span id="db-objects-tab-button" class="span-button" style="display:none" onclick="setObjectsTab('NEW-OBJECT')">создать новый</span>
+              </div>
+              <input id="delete-object-button" type="submit" value="Удалить" style="display:none" onclick="deleteObject()" />
+            </div>
+        </div>
+        <div id="navbar">
+          <span class="span-button" id="toolbar-tab-button" onclick="setToolbarTab('DB-TOOLBAR')">работать с базой</span>
+        </div>
+      </div>
+    </div>
+    <script src="js/reducers/map-reducer.js" charset="utf-8"></script>
+    <script src="js/reducers/toolbar-reducer.js" charset="utf-8"></script>
+    <script src="js/store.js" charset="utf-8"></script>
+    <script src="js/main.js" charset="utf-8"></script>
+    <script src="js/subscribers/map-subscribers.js" charset="utf-8"></script>
+    <script src="js/subscribers/toolbar-subscribers.js" charset="utf-8"></script>
+  </body>
+</html>
