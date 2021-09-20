@@ -1,6 +1,6 @@
 {
   "name": "arctica-emercom",
-  "version": "0.6.2",
+  "version": "0.6.4",
   "main": "app.js",
   "scripts": {
     "serve": "nodemon app.js"

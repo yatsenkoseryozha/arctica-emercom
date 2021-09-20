@@ -1,4 +1,4 @@
-store.subscribe(['SET-CATEGORIES'], (state) => {
+store.subscribe(['SET-CATEGORIES', 'DELETE-CATEGORY'], (state) => {
     let selects = document.getElementsByClassName('categories-list')
     let groups = document.getElementsByClassName('categories-options-group')
     for (let i = 0; i < selects.length; i++) {
@@ -14,13 +14,20 @@ store.subscribe(['SET-CATEGORIES'], (state) => {
 })
 
 store.subscribe(['SET-CURRENT-CATEGORY'], (state) => {
-    let options = document.getElementsByClassName('categories-option')
-    for (let i = 0; i < options.length; i++) {
-        if (options[i].value === state.toolbar.currentCategory.name)
-            options[i].selected = true
-    }
+    if (state.toolbar.currentCategory) {
+        let options = document.getElementsByClassName('categories-option')
+        for (let i = 0; i < options.length; i++) {
+            if (options[i].value === state.toolbar.currentCategory.name)
+                options[i].selected = true
+        }
 
-    document.getElementById('delete-category-button').removeAttribute('disabled')
+        document.getElementById('delete-category-button').removeAttribute('disabled')
+        document.querySelector('.db-objects-container').style.display = 'block'
+
+    } else {
+        document.getElementById('delete-category-button').disabled = true
+        document.querySelector('.db-objects-container').style.display = 'none'
+    }
 })
 
 store.subscribe(['SET-OBJECTS', 'DELETE-OBJECT'], (state) => {
@@ -28,15 +35,17 @@ store.subscribe(['SET-OBJECTS', 'DELETE-OBJECT'], (state) => {
     let groups = document.getElementsByClassName('objects-options-group')
     for (let i = 0; i < selects.length; i++) {
         groups[i].innerHTML = ''
-        state.toolbar.currentCategory.objects.map(object => {
-            let option = document.createElement('option')
-            option.className = 'objects-option'
-            option.innerHTML = object.name
-            groups[i].append(option)
-        })
+        if (state.toolbar.currentCategory) {
+            state.toolbar.currentCategory.objects.map(object => {
+                let option = document.createElement('option')
+                option.className = 'objects-option'
+                option.innerHTML = object.name
+                groups[i].append(option)
+            })
+        }
     }
 
-    if (state.toolbar.currentCategory.objects.length > 0) {
+    if (state.toolbar.currentCategory && state.toolbar.currentCategory.objects.length > 0) {
         document.getElementById('map-objects-list').removeAttribute('disabled')
         document.getElementById('update-category-display-button').value = `${
             (state.toolbar.currentCategory.objects.every(object => object.displayed)) ? 'Скрыть все' : 'Показать все'
@@ -104,7 +113,7 @@ store.subscribe(['SET-CATEGORIES-TAB'], (state) => {
             document.getElementById('delete-category-button').style.display = 'block'
             document.getElementById('db-categories-tab-button').setAttribute('onclick', 'setCategoriesTab("NEW-CATEGORY")')
             document.getElementById('db-categories-tab-button').innerHTML = 'создать новую'
-            document.querySelector('.db-objects-container').style.display = 'block'
+            if (state.toolbar.currentCategory) document.querySelector('.db-objects-container').style.display = 'block'
             break
         }
         case 'NEW-CATEGORY': {
