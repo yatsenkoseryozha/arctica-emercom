@@ -21,6 +21,12 @@ store.subscribe(['UPDATE-CATEGORY-DISPLAY'], (state) => {
     }
 })
 
+store.subscribe(['DELETE-CATEGORY'], (state) => {
+    state.toolbar.currentCategory.objects.map(object => {
+        if (object.displayed) state.map.map.geoObjects.remove(object.geoObject)
+    })
+})
+
 store.subscribe(['UPDATE-OBJECT-DISPLAY'], (state) => {
     if (state.toolbar.currentObject) {
         if (state.toolbar.currentObject.displayed)

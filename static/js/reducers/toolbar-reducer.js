@@ -1,7 +1,7 @@
 const toolbarInitialState = {
     categories: [],
-    currentCategory: {},
-    currentObject: {},
+    currentCategory: undefined,
+    currentObject: undefined,
     toolbarTab: 'MAP-TOOLBAR',
     categoriesTab: 'CATEGORIES',
     newCategoryIcon: undefined,
@@ -62,7 +62,9 @@ const toolbarReducer = (state = toolbarInitialState, action) => {
             return state
         }
         case 'SET-CURRENT-OBJECT': {
-            state.currentObject = state.currentCategory.objects.find(object => object.name === action.name)
+            if (state.currentCategory)
+                state.currentObject = state.currentCategory.objects.find(object => object.name === action.name)
+            else state.currentObject = undefined
             
             return state
         }
@@ -86,6 +88,19 @@ const toolbarReducer = (state = toolbarInitialState, action) => {
         case 'SET-NEW-CATEGORY-ICON': {
             state.newCategoryIcon = action.filename
 
+            return state
+        }
+        case 'CREATE-CATEGORY': {
+            state.newCategoryIcon = ''
+
+            return state
+        }
+        case 'DELETE-CATEGORY': {
+            state.categories.map((category, index) => {
+                if (category._id === state.currentCategory._id) 
+                    state.categories.splice(index, 1)
+            })
+            
             return state
         }
         case 'SET-OBJECTS-TAB': {
@@ -115,6 +130,7 @@ const setToolbarTabActionCreator = (tab) => ({ type: 'SET-TOOLBAR-TAB', tab })
 const setCategoriesTabActionCreator = (tab) => ({ type: 'SET-CATEGORIES-TAB', tab })
 const setNewCategoryIconActionCreator = (filename) => ({ type: 'SET-NEW-CATEGORY-ICON', filename })
 const createCategoryActionCreator = () => ({ type: 'CREATE-CATEGORY' })
+const deleteCategoryActionCreator = () => ({ type: 'DELETE-CATEGORY' })
 const setObjectsTabActionCreator = (tab) => ({ type: 'SET-OBJECTS-TAB', tab })
 const createObjectActionCreator = () => ({ type: 'CREATE-OBJECT' })
 const deleteObjectActionCreator = () => ({ type: 'DELETE-OBJECT' })

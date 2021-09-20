@@ -1,5 +1,5 @@
 require('dotenv').config()
-
+const fs = require('fs')
 const express = require('express')
 const multer = require('multer')
 const mongoose = require('mongoose')
@@ -30,8 +30,8 @@ const start = async () => {
       useUnifiedTopology: true 
     })
     app.listen(process.env.PORT, () => console.log(`Server started on port ${process.env.PORT}...`))
-  } catch (err) {
-    console.log(err)
+  } catch (error) {
+    console.log(error)
   }
 }
 start()
@@ -73,8 +73,20 @@ app.post('/create-category', [createCategory, uploadCategoryIcon.single('icon')]
     })
     const category = await Category.findOne({ _id: request.category_id })
     return response.status(200).json({ message: "Категория успешно создана!", category })
-  } catch (e) {
-    console.log(e)
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+app.delete('/delete-category', async (request, response) => {
+  try {
+    const { id } = request.headers
+    await Category.deleteOne({ _id: id })
+    await ArcticObject.deleteMany({ category: id })
+    fs.unlinkSync(__dirname + `/static/img/categories/${id}.png`)
+    return response.status(200).json({ message: "Категория успешно удалена!" })
+  } catch (error) {
+    console.log(error)
   }
 })
 

@@ -30,18 +30,22 @@ const setCurrentCategory = async (category) => {
 const updateCategoryDisplay = () => store.disptach(updateCategoryDisplayActionCreator())
 
 const getObjects = async () => {
-    let response = await fetch('/get-objects', {
-        method: 'GET',
-        headers: {
-            category: store.getState().toolbar.currentCategory._id
-        }
-    })
-    let data = await response.json()
+    if (store.getState().toolbar.currentCategory) {
+        let response = await fetch('/get-objects', {
+            method: 'GET',
+            headers: {
+                category: store.getState().toolbar.currentCategory._id
+            }
+        })
+        let data = await response.json()
 
-    store.disptach(setObjectsActionCreator(data.objects))
+        store.disptach(setObjectsActionCreator(data.objects))
 
-    if (data.objects.length > 0) setObjectsTab('OBJECTS')
-    else setObjectsTab('NEW-OBJECT')
+        if (data.objects.length > 0) setObjectsTab('OBJECTS')
+        else setObjectsTab('NEW-OBJECT')
+    } else {
+        store.disptach(setObjectsActionCreator([]))
+    }
 }
 
 const setCurrentObject = (object) => store.disptach(setCurrentObjectActionCreator(object))
@@ -73,6 +77,19 @@ const createCategory = async () => {
     setCurrentCategory(data.category.name)
 
     store.disptach(createCategoryActionCreator())
+}
+
+const deleteCategory = async () => {
+    let response = await fetch('/delete-category', {
+        method: 'DELETE',
+        headers: {
+            id: store.getState().toolbar.currentCategory._id
+        }
+    })
+    let data = await response.json()
+
+    store.disptach(deleteCategoryActionCreator())
+    setCurrentCategory('')
 }
 
 const setObjectsTab = (tab) => store.disptach(setObjectsTabActionCreator(tab))
@@ -109,7 +126,6 @@ const deleteObject = async () => {
         }
     })
     let data = await response.json()
-
 
     store.disptach(deleteObjectActionCreator())
     setCurrentObject('')
