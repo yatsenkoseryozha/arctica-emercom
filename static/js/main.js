@@ -1,6 +1,12 @@
 const start = async () => {
     store.disptach(initMapActionCreator())
 
+    if (sessionStorage.getItem('Toolbar-Tab'))
+        store.disptach(setToolbarTabActionCreator(sessionStorage.getItem('Toolbar-Tab')))
+
+    if (sessionStorage.getItem('User'))
+        store.disptach(setCurrentUserActionCreator(sessionStorage.getItem('User')))
+
     getCategories()
 }
 ymaps.ready(start)
@@ -34,7 +40,7 @@ const getObjects = async () => {
         let response = await fetch('/get-objects', {
             method: 'GET',
             headers: {
-                category: store.getState().toolbar.currentCategory._id
+                'Category-ID': store.getState().toolbar.currentCategory._id
             }
         })
         let data = await response.json()
@@ -52,7 +58,53 @@ const setCurrentObject = (object) => store.disptach(setCurrentObjectActionCreato
 
 const updateObjectDisplay = () => store.disptach(updateObjectDisplayActionCreator())
 
-const setToolbarTab = (tab) => store.disptach(setToolbarTabActionCreator(tab))
+const setToolbarTab = (tab) => {
+    sessionStorage.setItem('Toolbar-Tab', tab)
+
+    store.disptach(setToolbarTabActionCreator(tab))
+}
+
+const login = async () => {
+    let response = await fetch('/login', {
+        method: 'GET',
+        headers: {
+            'Access-Key': document.getElementById('access-key').value
+        },
+    })
+    let data = await response.json()
+
+    if (response.status == 200) {
+        sessionStorage.setItem('User', data.user)
+        sessionStorage.setItem('Access-Key', data.accessKey)
+
+        store.disptach(setCurrentUserActionCreator(data.user))
+    } else alert(data.message)
+}
+
+const logout = () => {
+    sessionStorage.removeItem('User')
+    sessionStorage.removeItem('Access-Key')
+
+    store.disptach(removeCurrentUserActionCreator())
+}
+
+const getAccessKey = async () => {
+    if (sessionStorage.getItem('Access-Key')) 
+        return sessionStorage.getItem('Access-Key')
+    else {
+        let response = await fetch('/login', {
+            method: 'GET',
+            headers: {
+                'Access-Key': document.getElementById('access-key').value
+            },
+        })
+        let data = await response.json()
+
+        if (response.status == 200)
+            return data.accessKey
+        else return document.getElementById('access-key').value
+    }
+}
 
 const setCategoriesTab = (tab) => store.disptach(setCategoriesTabActionCreator(tab))
 
@@ -68,28 +120,35 @@ const createCategory = async () => {
 
     let response = await fetch('/create-category', {
         method: 'POST',
+        headers: {
+            'Access-Key': await getAccessKey()
+        },
         body: formData
     })
     let data = await response.json()
-    console.log(data.category)
 
-    await getCategories()
-    setCurrentCategory(data.category.name)
+    if (response.status == 200) {
+        await getCategories()
+        setCurrentCategory(data.category.name)
 
-    store.disptach(createCategoryActionCreator())
+        store.disptach(createCategoryActionCreator())
+    } else alert(data.message)
 }
 
 const deleteCategory = async () => {
     let response = await fetch('/delete-category', {
         method: 'DELETE',
         headers: {
-            id: store.getState().toolbar.currentCategory._id
+            'Access-Key': await getAccessKey(),
+            'Category-ID': store.getState().toolbar.currentCategory._id
         }
     })
     let data = await response.json()
 
-    store.disptach(deleteCategoryActionCreator())
-    setCurrentCategory('')
+    if (response.status == 200) {
+        store.disptach(deleteCategoryActionCreator())
+        setCurrentCategory('')
+    } else alert(data.message)
 }
 
 const setObjectsTab = (tab) => store.disptach(setObjectsTabActionCreator(tab))
@@ -98,7 +157,8 @@ const createObject = async () => {
     let response = await fetch('/create-object', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json;charset=utf-8'
+            'Content-Type': 'application/json;charset=utf-8',
+            'Access-Key': await getAccessKey()
         },
         body: JSON.stringify({
             name: document.getElementById('new-object-name').value, 
@@ -112,24 +172,29 @@ const createObject = async () => {
     })
     let data = await response.json()
 
-    await getObjects()
-    setCurrentObject(data.object.name)
+    if (response.status == 200) {
+        await getObjects()
+        setCurrentObject(data.object.name)
 
-    store.disptach(createObjectActionCreator())
+        store.disptach(createObjectActionCreator())
+    } else alert(data.message)
 }
 
 const deleteObject = async () => {
     let response = await fetch('/delete-object', {
         method: 'DELETE',
         headers: {
-            id: store.getState().toolbar.currentObject._id
+            'Access-Key': await getAccessKey(),
+            'Object-ID': store.getState().toolbar.currentObject._id
         }
     })
     let data = await response.json()
 
-    store.disptach(deleteObjectActionCreator())
-    setCurrentObject('')
+    if (response.status == 200) {
+        store.disptach(deleteObjectActionCreator())
+        setCurrentObject('')
 
-    if (store.getState().toolbar.currentCategory.objects.length > 0) setObjectsTab('OBJECTS')
-    else setObjectsTab('NEW-OBJECT')
+        if (store.getState().toolbar.currentCategory.objects.length > 0) setObjectsTab('OBJECTS')
+        else setObjectsTab('NEW-OBJECT')
+    } else alert(data.message)
 }

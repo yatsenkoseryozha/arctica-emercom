@@ -35,10 +35,6 @@ body {
   padding: 15px 0;
 }
 
-.map-regions-container {
-  margin-bottom: 50px;
-}
-
 .short-inputs-container {
   display: flex;
 }
@@ -56,6 +52,9 @@ body {
 }
 
 .span-button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
   margin-bottom: 10px;
 }
 
@@ -84,10 +83,21 @@ body {
   outline: none;
 }
 
-#new-category-icon-container span {
+#new-category-icon-name {
   display: flex;
   align-items: center;
   width: auto; height: 100%;
+}
+
+#access-key-description {
+  font-size: 12px;
+  line-height: 16px;
+  color: #AAAAAA;
+}
+
+#current-user {
+  font-size: 24px;
+  color: #888888;
 }
 
 #navbar {
@@ -96,6 +106,7 @@ body {
   align-items: center;
   box-sizing: border-box;
   width: 100%; height: 60px;
+  border-top: 1px solid #C4C4C4;
   padding: 0 15px;
 }
 
