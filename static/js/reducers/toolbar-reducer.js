@@ -3,6 +3,7 @@ const toolbarInitialState = {
     currentCategory: undefined,
     currentObject: undefined,
     toolbarTab: 'MAP-TOOLBAR',
+    currentUser: undefined,
     categoriesTab: 'CATEGORIES',
     newCategoryIcon: undefined,
     objectsTab: undefined
@@ -80,6 +81,16 @@ const toolbarReducer = (state = toolbarInitialState, action) => {
 
             return state
         }
+        case 'SET-CURRENT-USER': {
+            state.currentUser = action.user
+
+            return state
+        }
+        case 'REMOVE-CURRENT-USER': {
+            state.currentUser = undefined
+
+            return state
+        }
         case 'SET-CATEGORIES-TAB': {
             state.categoriesTab = action.tab
 
@@ -127,6 +138,8 @@ const setObjectsActionCreator = (objects) => ({ type: 'SET-OBJECTS', objects })
 const setCurrentObjectActionCreator = (name) => ({ type: 'SET-CURRENT-OBJECT', name })
 const updateObjectDisplayActionCreator = () => ({ type: 'UPDATE-OBJECT-DISPLAY' }) 
 const setToolbarTabActionCreator = (tab) => ({ type: 'SET-TOOLBAR-TAB', tab })
+const setCurrentUserActionCreator = (user) => ({ type: 'SET-CURRENT-USER', user })
+const removeCurrentUserActionCreator = () => ({ type: 'REMOVE-CURRENT-USER' })
 const setCategoriesTabActionCreator = (tab) => ({ type: 'SET-CATEGORIES-TAB', tab })
 const setNewCategoryIconActionCreator = (filename) => ({ type: 'SET-NEW-CATEGORY-ICON', filename })
 const createCategoryActionCreator = () => ({ type: 'CREATE-CATEGORY' })

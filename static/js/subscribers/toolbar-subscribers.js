@@ -103,6 +103,33 @@ store.subscribe(['SET-TOOLBAR-TAB'], (state) => {
     }
 })
 
+store.subscribe(['SET-CURRENT-USER'], (state) => {
+    document.getElementById('access-key').remove()
+    document.getElementById('access-key-description').style.display = 'none'
+
+    const currentUser = document.createElement('span')
+    currentUser.id = 'current-user'
+    currentUser.innerHTML = state.toolbar.currentUser
+    document.getElementById('access-key-button-container').prepend(currentUser)
+
+    document.getElementById('access-key-button').setAttribute('onclick', 'logout()')
+    document.getElementById('access-key-button').innerHTML = 'завершить сессию'
+})
+
+store.subscribe(['REMOVE-CURRENT-USER'], (state) => {
+    document.getElementById('current-user').remove()
+    document.getElementById('access-key-description').style.display = 'block'
+
+    const accessKey = document.createElement('input')
+    accessKey.id = 'access-key'
+    accessKey.type = 'text'
+    accessKey.placeholder = 'Ключ доступа'
+    document.getElementById('access-key-container').prepend(accessKey)
+
+    document.getElementById('access-key-button').setAttribute('onclick', 'login()')
+    document.getElementById('access-key-button').innerHTML = 'сохранить для текущей сессии'
+})
+
 store.subscribe(['SET-CATEGORIES-TAB'], (state) => {
     switch(state.toolbar.categoriesTab) {
         case 'CATEGORIES': {
@@ -141,6 +168,7 @@ store.subscribe(['CREATE-CATEGORY'], (state) => {
 })
 
 store.subscribe(['SET-OBJECTS-TAB'], (state) => {
+    console.log(state.toolbar.objectsTab)
     switch(state.toolbar.objectsTab) {
         case 'OBJECTS': {
             document.getElementById('db-objects-list').style.display = 'block'
@@ -176,4 +204,9 @@ store.subscribe(['CREATE-OBJECT'], (state) => {
     document.getElementById('new-object-website').value = ''
     document.getElementById('new-object-longitude').value = ''
     document.getElementById('new-object-latitude').value = ''
+})
+
+store.subscribe(['CREATE-CATEGORY', 'DELETE-CATEGORY', 'CREATE-OBJECT', 'DELETE-OBJECT'], (state) => {
+    if (!state.toolbar.currentUser)
+        document.getElementById('access-key').value = ''
 })

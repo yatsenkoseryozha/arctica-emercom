@@ -3,9 +3,12 @@ const fs = require('fs')
 const express = require('express')
 const multer = require('multer')
 const mongoose = require('mongoose')
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 const Category = require('./models/Category')
 const ArcticObject = require('./models/Object')
+const User = require('./models/User')
 
 const categoryIconStorage = multer.diskStorage({
   destination: (request, file, cb) => {
@@ -51,13 +54,70 @@ app.get('/get-categories', async (request, response) => {
 
 app.get('/get-objects', async (request, response) => {
   try {
-    const { category } = request.headers
+    const category = request.headers['category-id']
     const objects = await ArcticObject.find({ category })
     return response.status(200).json({ objects })
   } catch (error) {
     console.log(error)
   }
 })
+
+app.post('/registration', async (request, response) => {
+  try {
+    const { username, accessKey } = request.body
+    const hashAccessKey = bcrypt.hashSync(accessKey, 7)
+    const user = new User({ name: username, role: '', accessKey: hashAccessKey })
+    user.save()
+    return response.status(200).json({ message: "Пользователь создан!"})
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+app.get('/login', async (request, response) => {
+  try {
+    const accessKey = request.headers['access-key']
+    if (!accessKey)
+      return response.status(403).json({ message: "Нет доступа!" })
+    let candidate = undefined
+    const users = await User.find({})
+    users.map(user => {
+      if (bcrypt.compareSync(accessKey, user.accessKey)) 
+        candidate = user
+    })
+    if (!candidate)
+      return response.status(403).json({ message: "Нет доступа!" })
+    return response.status(200).json({ user: candidate.name, accessKey: jwt.sign(candidate.accessKey, process.env.SECRET)})
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+const auth = (action) => async (request, response, next) => {
+  const accessKey = request.headers['access-key']
+  if (!accessKey)
+    return response.status(403).json({ message: "Нет доступа!" })
+  const decodedAccessKey = jwt.verify(accessKey, process.env.SECRET)
+  const user = await User.findOne({ accessKey: decodedAccessKey })
+  if (!user)
+    return response.status(403).json({ message: "Нет доступа!" })
+  if (action === 'CREATE-CATEGORY' || action === 'DELETE-CATEGORY') {
+    if (user.role !== 'admin') 
+      return response.status(403).json({ message: "Нет доступа!" })
+    next()
+  } else if (action === 'CREATE-OBJECT') {
+    const category = await Category.findOne({ _id: request.body.category })
+    if (category.name !== 'Другие объекты' && user.role !== 'admin')
+      return response.status(403).json({ message: "Нет доступа!" })
+    next()
+  } else if (action === 'DELETE-OBJECT') {
+    const object = await ArcticObject.findOne({ _id: request.headers['object-id'] })
+    const category = await Category.findOne({ _id: object.category })
+    if (category.name !== 'Другие объекты' && user.role !== 'admin')
+      return response.status(403).json({ message: "Нет доступа!" })
+    next()
+  } else return response.status(404).json({ message: "Некорректный запрос!" })
+}
 
 const createCategory = async (request, response, next) => {
   const category = new Category({})
@@ -66,7 +126,7 @@ const createCategory = async (request, response, next) => {
   next()
 }
 
-app.post('/create-category', [createCategory, uploadCategoryIcon.single('icon')], async (request, response) => {
+app.post('/create-category', [auth('CREATE-CATEGORY'), createCategory, uploadCategoryIcon.single('icon')], async (request, response) => {
   try {
     await Category.updateOne({ _id: request.category_id }, {
       $set: { name: request.body.name, icon: `../img/categories/${request.file.filename}` }
@@ -78,9 +138,9 @@ app.post('/create-category', [createCategory, uploadCategoryIcon.single('icon')]
   }
 })
 
-app.delete('/delete-category', async (request, response) => {
+app.delete('/delete-category', auth('DELETE-CATEGORY'), async (request, response) => {
   try {
-    const { id } = request.headers
+    const id = request.headers['category-id']
     await Category.deleteOne({ _id: id })
     await ArcticObject.deleteMany({ category: id })
     fs.unlinkSync(__dirname + `/static/img/categories/${id}.png`)
@@ -90,7 +150,7 @@ app.delete('/delete-category', async (request, response) => {
   }
 })
 
-app.post('/create-object', async (request, response) => {
+app.post('/create-object', auth('CREATE-OBJECT'), async (request, response) => {
   try {
     const { name, category, coordinates, website } = request.body
     const object = new ArcticObject({ name, category, coordinates, website })
@@ -101,9 +161,9 @@ app.post('/create-object', async (request, response) => {
   }
 })
 
-app.delete('/delete-object', async (request, response) => {
+app.delete('/delete-object', auth('DELETE-OBJECT'), async (request, response) => {
   try {
-    const { id } = request.headers
+    const id = request.headers['object-id']
     await ArcticObject.remove({ _id: id })
     return response.status(200).json({ message: "Объект успешно удален!" })
   } catch (error) {

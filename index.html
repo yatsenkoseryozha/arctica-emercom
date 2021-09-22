@@ -12,9 +12,9 @@
       <div id="map"></div>
       <div id="sidebar">
         <div id="toolbar">
-            <div id="map-toolbar">
+            <div id="map-toolbar" style="display:none">
               <!-- MAP-REGIONS -->
-              <div class="map-regions-container short-inputs-container">
+              <div class="map-regions-container short-inputs-container" style="margin-bottom:50px">
                 <input class="short-input regions-short-input" id="update-regions-display-button" type="submit" value="Регионы России" onclick="updateRegionsDisplay()">
                 <input class="short-input regions-short-input" id="update-arctic-display-button" type="submit" value="Арктическая зона России" onclick="updateArcticDisplay()">
               </div>
@@ -35,6 +35,15 @@
               </div>
             </div>
             <div id="db-toolbar" style="display:none">
+              <!-- ACCESS-KEY -->
+              <div id="access-key-container" style="margin-bottom:50px">
+                <input id="access-key" type="text" placeholder="Ключ доступа" />
+                <div id="access-key-button-container" class="span-button-container">
+                  <span id="access-key-button" class="span-button" onclick="login()">сохранить для текущей сессии</span>
+                </div>
+                <p id="access-key-description">Ключ доступа необходим для того, чтобы Ваши действия были внесены в базу данных. 
+                Используйте ключ GUEST-ACCESS-KEY для работы с категорией «Другие объекты»</p>
+              </div>
               <!-- DB-CATEGORIES -->
               <div class="db-categories-container">
                 <select class="categories-list" id="db-categories-list" disabled onchange="setCurrentCategory(this.options[this.selectedIndex].value)">
