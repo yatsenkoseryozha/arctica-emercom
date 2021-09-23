@@ -168,7 +168,6 @@ store.subscribe(['CREATE-CATEGORY'], (state) => {
 })
 
 store.subscribe(['SET-OBJECTS-TAB'], (state) => {
-    console.log(state.toolbar.objectsTab)
     switch(state.toolbar.objectsTab) {
         case 'OBJECTS': {
             document.getElementById('db-objects-list').style.display = 'block'

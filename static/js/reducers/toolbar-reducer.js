@@ -40,9 +40,8 @@ const toolbarReducer = (state = toolbarInitialState, action) => {
                 if (!state.currentCategory.objects.some(currentCategoryObject => object._id === currentCategoryObject._id)) {
                     object.geoObject = new ymaps.Placemark([object.coordinates.longitude, object.coordinates.latitude], {
                         hintContent: object.name,
-                        balloonContent: `
-                        <h3><a href=${object.website}>${object.name}</a></h3>
-                        `
+                        balloonContent: (object.website) ? 
+                            `<h3><a href=${object.website} target="_blank">${object.name}</a></h3>` : `<h3>${object.name}</a>`
                     }, {
                         iconLayout: "default#image",
                         iconImageHref: currentCategory.icon,
