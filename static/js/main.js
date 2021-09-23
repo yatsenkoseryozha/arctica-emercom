@@ -3,6 +3,8 @@ const start = async () => {
 
     if (sessionStorage.getItem('Toolbar-Tab'))
         store.disptach(setToolbarTabActionCreator(sessionStorage.getItem('Toolbar-Tab')))
+    else
+        setToolbarTab('MAP-TOOLBAR')
 
     if (sessionStorage.getItem('User'))
         store.disptach(setCurrentUserActionCreator(sessionStorage.getItem('User')))
@@ -114,25 +116,32 @@ const setNewCategoryIcon = () => {
 }
 
 const createCategory = async () => {
-    var formData = new FormData();
-    formData.append('name', document.getElementById('new-category-name').value)
-    formData.append('icon', document.getElementById('new-category-icon').files[0])
+    const newCategoryName = document.getElementById('new-category-name').value
+    const newCategoryIcon = document.getElementById('new-category-icon').files[0]
 
-    let response = await fetch('/create-category', {
-        method: 'POST',
-        headers: {
-            'Access-Key': await getAccessKey()
-        },
-        body: formData
-    })
-    let data = await response.json()
+    if (!newCategoryName || !newCategoryName.trim().length || !newCategoryIcon)
+        alert('Заполните все поля!')
+    else {
+        var formData = new FormData()
+        formData.append('name', newCategoryName.trim())
+        formData.append('icon', newCategoryIcon)
 
-    if (response.status == 200) {
-        await getCategories()
-        setCurrentCategory(data.category.name)
+        let response = await fetch('/create-category', {
+            method: 'POST',
+            headers: {
+                'Access-Key': await getAccessKey()
+            },
+            body: formData
+        })
+        let data = await response.json()
 
-        store.disptach(createCategoryActionCreator())
-    } else alert(data.message)
+        if (response.status == 200) {
+            await getCategories()
+            setCurrentCategory(data.category.name)
+
+            store.disptach(createCategoryActionCreator())
+        } else alert(data.message)
+    }
 }
 
 const deleteCategory = async () => {
@@ -154,30 +163,44 @@ const deleteCategory = async () => {
 const setObjectsTab = (tab) => store.disptach(setObjectsTabActionCreator(tab))
 
 const createObject = async () => {
-    let response = await fetch('/create-object', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8',
-            'Access-Key': await getAccessKey()
-        },
-        body: JSON.stringify({
-            name: document.getElementById('new-object-name').value, 
-            category: store.getState().toolbar.currentCategory._id, 
-            coordinates: {
-                longitude: document.getElementById('new-object-longitude').value, 
-                latitude: document.getElementById('new-object-latitude').value
-            }, 
-            website: document.getElementById('new-object-website').value
+    const newObjectName = document.getElementById('new-object-name').value
+    const newObjectCategory = store.getState().toolbar.currentCategory._id
+    const newObjectLongitude = document.getElementById('new-object-longitude').value
+    const newObjectLatitude = document.getElementById('new-object-latitude').value
+    const newObjectWebsite = document.getElementById('new-object-website').value
+
+    if (!newObjectName || !newObjectName.trim().length || 
+        !newObjectCategory || !newObjectCategory.trim().length || 
+        !newObjectLatitude || !newObjectLatitude.trim().length || 
+        !newObjectLongitude || !newObjectLongitude.trim().length || 
+        (newObjectWebsite && !newObjectWebsite.trim().length))
+        alert('Заполните все обязательные поля!')
+    else {
+        let response = await fetch('/create-object', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'Access-Key': await getAccessKey()
+            },
+            body: JSON.stringify({
+                name: newObjectName.trim(), 
+                category: newObjectCategory.trim(), 
+                coordinates: {
+                    longitude: newObjectLongitude.trim(), 
+                    latitude: newObjectLatitude.trim()
+                }, 
+                website: newObjectWebsite.trim()
+            })
         })
-    })
-    let data = await response.json()
+        let data = await response.json()
 
-    if (response.status == 200) {
-        await getObjects()
-        setCurrentObject(data.object.name)
+        if (response.status == 200) {
+            await getObjects()
+            setCurrentObject(data.object.name)
 
-        store.disptach(createObjectActionCreator())
-    } else alert(data.message)
+            store.disptach(createObjectActionCreator())
+        } else alert(data.message)
+    }
 }
 
 const deleteObject = async () => {
