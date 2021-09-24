@@ -6,7 +6,8 @@ const toolbarInitialState = {
     currentUser: undefined,
     categoriesTab: 'CATEGORIES',
     newCategoryIcon: undefined,
-    objectsTab: undefined
+    objectsTab: undefined,
+    sidebarDisplay: undefined
 }
 
 const toolbarReducer = (state = toolbarInitialState, action) => {
@@ -126,7 +127,11 @@ const toolbarReducer = (state = toolbarInitialState, action) => {
             
             return state
         }
-        default: return state
+        case 'UPDATE-SIDEBAR-DISPLAY': {
+            state.sidebarDisplay = action.value
+            
+            return state
+        } default: return state
     }
 }
 
@@ -146,3 +151,4 @@ const deleteCategoryActionCreator = () => ({ type: 'DELETE-CATEGORY' })
 const setObjectsTabActionCreator = (tab) => ({ type: 'SET-OBJECTS-TAB', tab })
 const createObjectActionCreator = () => ({ type: 'CREATE-OBJECT' })
 const deleteObjectActionCreator = () => ({ type: 'DELETE-OBJECT' })
+const updateSidebarDisplayActionCreator = (value) => ({ type: 'UPDATE-SIDEBAR-DISPLAY', value })

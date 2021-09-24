@@ -13,9 +13,17 @@ const start = async () => {
 }
 ymaps.ready(start)
 
-const updateRegionsDisplay = () => store.disptach(updateRegionsDisplayActionCreator())
+const updateRegionsDisplay = () => {
+    store.disptach(updateRegionsDisplayActionCreator())
+    if (window.screen.availWidth < 1199 && store.getState().map.regions.every(region => region.displayed))
+        store.disptach(updateSidebarDisplayActionCreator(false))
+}
 
-const updateArcticDisplay = () => store.disptach(updateArcticDisplayActionCreator())
+const updateArcticDisplay = () => {
+    store.disptach(updateArcticDisplayActionCreator())
+    if (window.screen.availWidth < 1199 && store.getState().map.arctic.displayed)
+        store.disptach(updateSidebarDisplayActionCreator(false))
+}
 
 const getCategories = async () => {
     let response = await fetch('/get-categories', {
@@ -35,7 +43,11 @@ const setCurrentCategory = async (category) => {
     setCurrentObject('')
 }
 
-const updateCategoryDisplay = () => store.disptach(updateCategoryDisplayActionCreator())
+const updateCategoryDisplay = () => {
+    store.disptach(updateCategoryDisplayActionCreator())
+    if (window.screen.availWidth < 1199 && store.getState().toolbar.currentCategory.objects.every(object => object.displayed))
+        store.disptach(updateSidebarDisplayActionCreator(false))
+}
 
 const getObjects = async () => {
     if (store.getState().toolbar.currentCategory) {
@@ -58,7 +70,11 @@ const getObjects = async () => {
 
 const setCurrentObject = (object) => store.disptach(setCurrentObjectActionCreator(object))
 
-const updateObjectDisplay = () => store.disptach(updateObjectDisplayActionCreator())
+const updateObjectDisplay = () => {
+    store.disptach(updateObjectDisplayActionCreator())
+    if (window.screen.availWidth < 1199 && store.getState().toolbar.currentObject.displayed)
+        store.disptach(updateSidebarDisplayActionCreator(false))
+}
 
 const setToolbarTab = (tab) => {
     sessionStorage.setItem('Toolbar-Tab', tab)
@@ -221,3 +237,5 @@ const deleteObject = async () => {
         else setObjectsTab('NEW-OBJECT')
     } else alert(data.message)
 }
+
+const updateSidebarDisplay = (value) => store.disptach(updateSidebarDisplayActionCreator(value))

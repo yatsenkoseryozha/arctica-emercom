@@ -209,3 +209,25 @@ store.subscribe(['CREATE-CATEGORY', 'DELETE-CATEGORY', 'CREATE-OBJECT', 'DELETE-
     if (!state.toolbar.currentUser)
         document.getElementById('access-key').value = ''
 })
+
+store.subscribe(['UPDATE-SIDEBAR-DISPLAY'], (state) => {
+    if (!state.toolbar.sidebarDisplay) {
+        document.getElementById('sidebar').style.left = '-100%'
+        document.getElementById('map').style.width = '100%'
+        let interval = setInterval(() => state.map.map.container.fitToViewport(), 10)
+        setTimeout(() => {
+            clearInterval(interval)
+            state.map.map.container.fitToViewport()
+            document.getElementById('show-sidebar-button').style.left = '8px'
+        }, 400)
+    } else {
+        document.getElementById('sidebar').style.left = '0'
+        document.getElementById('map').style.width = 'calc(100% - 390px)'
+        let interval = setInterval(() => state.map.map.container.fitToViewport(), 10)
+        setTimeout(() => {
+            clearInterval(interval)
+            state.map.map.container.fitToViewport()
+            document.getElementById('show-sidebar-button').style.left = '-22px'
+        }, 400)
+    }
+})

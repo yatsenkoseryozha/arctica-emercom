@@ -2,6 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=YMAP_API_KEY&lang=ru_RU" charset="utf-8"></script>
     <script src="https://github.com/yatsenkoseryozha/simple-store/releases/download/v1.0/simple-store.js"></script>
     <link rel="stylesheet" href="css/style.css">
@@ -9,28 +10,27 @@
   </head>
   <body>
     <div class="app-wrapper">
-      <div id="map"></div>
       <div id="sidebar">
         <div id="toolbar">
             <div id="map-toolbar" style="display:none">
               <!-- MAP-REGIONS -->
-              <div class="map-regions-container short-inputs-container" style="margin-bottom:50px">
-                <input class="short-input regions-short-input" id="update-regions-display-button" type="submit" value="Регионы России" onclick="updateRegionsDisplay()">
-                <input class="short-input regions-short-input" id="update-arctic-display-button" type="submit" value="Арктическая зона России" onclick="updateArcticDisplay()">
+              <div class="short-inputs-container" style="margin-bottom:50px">
+                <input id="update-regions-display-button" class="short-input" type="submit" value="Регионы России" onclick="updateRegionsDisplay()">
+                <input id="update-arctic-display-button" class="short-input" type="submit" value="Арктическая зона" onclick="updateArcticDisplay()">
               </div>
               <!-- MAP-OBJECTS -->
               <div class="map-objects-container">
-                <select class="categories-list" id="map-categories-list" disabled onchange="setCurrentCategory(this.options[this.selectedIndex].value)">
+                <select id="map-categories-list" class="categories-list" disabled onchange="setCurrentCategory(this.options[this.selectedIndex].value)">
                   <option style="display:none">Выберите категорию</option>
-                  <optgroup class="categories-options-group" id="map-categories-options-group" label="Выберите категорию"></optgroup>
+                  <optgroup id="map-categories-options-group" class="categories-options-group" label=""></optgroup>
                 </select>
-                <select class="objects-list" id="map-objects-list" disabled onchange="setCurrentObject(this.options[this.selectedIndex].value)">
+                <select id="map-objects-list" class="objects-list" disabled onchange="setCurrentObject(this.options[this.selectedIndex].value)">
                   <option style="display:none">Выберите объект</option>
-                  <optgroup class="objects-options-group" id="map-objects-options-group" label="Выберите объект"></optgroup>
+                  <optgroup id="map-objects-options-group" class="objects-options-group" label=""></optgroup>
                 </select>
                 <div class="short-inputs-container">
-                  <input class="short-input objects-short-input" id="update-category-display-button" type="submit" value="Показать все" disabled onclick="updateCategoryDisplay()" />
-                  <input class="short-input objects-short-input" id="update-object-display-button" type="submit" value="Показать" disabled onclick="updateObjectDisplay()" />
+                  <input id="update-category-display-button" class="short-input" type="submit" value="Показать все" disabled onclick="updateCategoryDisplay()" />
+                  <input id="update-object-display-button" class="short-input" type="submit" value="Показать" disabled onclick="updateObjectDisplay()" />
                 </div>
               </div>
             </div>
@@ -38,7 +38,7 @@
               <!-- ACCESS-KEY -->
               <div id="access-key-container" style="margin-bottom:50px">
                 <input id="access-key" type="text" placeholder="Ключ доступа" />
-                <div id="access-key-button-container" class="span-button-container">
+                <div id="access-key-button-container" class="span-button-container access-key-span-button-container">
                   <span id="access-key-button" class="span-button" onclick="login()">сохранить для текущей сессии</span>
                 </div>
                 <p id="access-key-description">Ключ доступа необходим для того, чтобы Ваши действия были внесены в базу данных. 
@@ -46,9 +46,9 @@
               </div>
               <!-- DB-CATEGORIES -->
               <div class="db-categories-container">
-                <select class="categories-list" id="db-categories-list" disabled onchange="setCurrentCategory(this.options[this.selectedIndex].value)">
+                <select id="db-categories-list" class="categories-list" disabled onchange="setCurrentCategory(this.options[this.selectedIndex].value)">
                   <option style="display:none">Выберите категорию</option>
-                  <optgroup class="categories-options-group" id="db-categories-options-group" label="Выберите категорию"></optgroup>
+                  <optgroup id="db-categories-options-group" class="categories-options-group" label=""></optgroup>
                 </select>
                 <input id="new-category-name" type="text" placeholder="Название" style="display:none" />
                 <label id="new-category-icon-container" style="display:none" >
@@ -63,15 +63,15 @@
               </div>
               <!-- DB-OBJECTS -->
               <div class="db-objects-container">
-                <select class="objects-list" id="db-objects-list" style="display:none" onchange="setCurrentObject(this.options[this.selectedIndex].value)">
+                <select id="db-objects-list" class="objects-list" style="display:none" onchange="setCurrentObject(this.options[this.selectedIndex].value)">
                   <option style="display:none">Выберите объект</option>
-                  <optgroup class="objects-options-group" id="db-objects-options-group" label="Выберите объект"></optgroup>
+                  <optgroup id="db-objects-options-group" class="objects-options-group" label=""></optgroup>
                 </select>
                 <input id="new-object-name" type="text" placeholder="Название" style="display:none" />
                 <input id="new-object-website" type="text" placeholder="Веб-сайт (необязательно)" style="display:none" />
                 <div id="new-object-coordinates" class="short-inputs-container" style="display:none" >
-                  <input id="new-object-longitude" class="short-input coordinates-short-input" type="text" placeholder="Долгота" />
-                  <input id="new-object-latitude" class="short-input coordinates-short-input" type="text" placeholder="Широта" />
+                  <input id="new-object-longitude" class="short-input" type="text" placeholder="Долгота" />
+                  <input id="new-object-latitude" class="short-input" type="text" placeholder="Широта" />
                 </div>
                 <input id="create-object-button" type="submit" value="Создать" style="display:none" onclick="createObject()" />
                 <div class="span-button-container">
@@ -82,9 +82,12 @@
             </div>
         </div>
         <div id="navbar">
-          <span class="span-button" id="toolbar-tab-button" onclick="setToolbarTab('DB-TOOLBAR')">работать с базой</span>
+          <span id="toolbar-tab-button" class="span-button" onclick="setToolbarTab('DB-TOOLBAR')">работать с базой</span>
+          <img id="hide-sidebar-button" src="img/hide-sidebar-button.svg" alt="скрыть сайдбар" onclick="updateSidebarDisplay(false)">
         </div>
       </div>
+      <img id="show-sidebar-button" src="img/show-sidebar-button.svg" alt="показать сайдбар" onclick="updateSidebarDisplay(true)">
+      <div id="map"></div>
     </div>
     <script src="js/reducers/map-reducer.js" charset="utf-8"></script>
     <script src="js/reducers/toolbar-reducer.js" charset="utf-8"></script>
