@@ -1,8 +1,9 @@
 {
   "name": "arctica-emercom",
-  "version": "0.8.2",
+  "version": "1.0.0",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "serve": "nodemon app.js"
   },
   "author": "Yatsenko Sergey <yatsenkoseryozha@gmail.com>",

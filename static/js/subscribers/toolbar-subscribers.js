@@ -1,13 +1,16 @@
 store.subscribe(['SET-CATEGORIES', 'DELETE-CATEGORY'], (state) => {
     let selects = document.getElementsByClassName('categories-list')
-    let groups = document.getElementsByClassName('categories-options-group')
     for (let i = 0; i < selects.length; i++) {
-        groups[i].innerHTML = ''
+        let firstOption = document.createElement('option')
+        firstOption.style.display = 'none'
+        firstOption.innerHTML = 'Выберите категорию'
+        selects[i].innerHTML = ''
+        selects[i].append(firstOption)
         state.toolbar.categories.map(category => {
             let option = document.createElement('option')
             option.className = 'categories-option'
             option.innerHTML = category.name
-            groups[i].append(option)
+            selects[i].append(option)
         })
         selects[i].removeAttribute('disabled')
     }
@@ -32,15 +35,18 @@ store.subscribe(['SET-CURRENT-CATEGORY'], (state) => {
 
 store.subscribe(['SET-OBJECTS', 'DELETE-OBJECT'], (state) => {
     let selects = document.getElementsByClassName('objects-list')
-    let groups = document.getElementsByClassName('objects-options-group')
     for (let i = 0; i < selects.length; i++) {
-        groups[i].innerHTML = ''
+        let firstOption = document.createElement('option')
+        firstOption.style.display = 'none'
+        firstOption.innerHTML = 'Выберите объект'
+        selects[i].innerHTML = ''
+        selects[i].append(firstOption)
         if (state.toolbar.currentCategory) {
             state.toolbar.currentCategory.objects.map(object => {
                 let option = document.createElement('option')
                 option.className = 'objects-option'
                 option.innerHTML = object.name
-                groups[i].append(option)
+                selects[i].append(option)
             })
         }
     }
@@ -227,7 +233,7 @@ store.subscribe(['UPDATE-SIDEBAR-DISPLAY'], (state) => {
         setTimeout(() => {
             clearInterval(interval)
             state.map.map.container.fitToViewport()
-            document.getElementById('show-sidebar-button').style.left = '-22px'
+            document.getElementById('show-sidebar-button').style.left = '-34px'
         }, 400)
     }
 })

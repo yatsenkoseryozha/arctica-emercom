@@ -9,6 +9,8 @@ const start = async () => {
     if (sessionStorage.getItem('User'))
         store.disptach(setCurrentUserActionCreator(sessionStorage.getItem('User')))
 
+    store.disptach(updateSidebarDisplayActionCreator(true))
+
     getCategories()
 }
 ymaps.ready(start)

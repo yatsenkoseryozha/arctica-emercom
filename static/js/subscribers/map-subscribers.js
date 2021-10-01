@@ -29,9 +29,10 @@ store.subscribe(['DELETE-CATEGORY'], (state) => {
 
 store.subscribe(['UPDATE-OBJECT-DISPLAY'], (state) => {
     if (state.toolbar.currentObject) {
-        if (state.toolbar.currentObject.displayed)
+        if (state.toolbar.currentObject.displayed) {
             state.map.map.geoObjects.add(state.toolbar.currentObject.geoObject)
-        else
+            state.map.map.setCenter([state.toolbar.currentObject.coordinates.latitude, state.toolbar.currentObject.coordinates.longitude])
+        } else
             state.map.map.geoObjects.remove(state.toolbar.currentObject.geoObject)
     }
 })
