@@ -87,7 +87,7 @@ app.get('/login', async (request, response) => {
     })
     if (!candidate)
       return response.status(403).json({ message: "Нет доступа!" })
-    return response.status(200).json({ user: candidate.name, accessKey: jwt.sign(candidate.accessKey, process.env.SECRET)})
+    return response.status(200).json({ user: candidate.name, accessKey: jwt.sign(candidate.accessKey, process.env.JWT_SECRET)})
   } catch (error) {
     console.log(error)
   }
@@ -97,7 +97,7 @@ const auth = (action) => async (request, response, next) => {
   const accessKey = request.headers['access-key']
   if (!accessKey)
     return response.status(403).json({ message: "Нет доступа!" })
-  const decodedAccessKey = jwt.verify(accessKey, process.env.SECRET)
+  const decodedAccessKey = jwt.verify(accessKey, process.env.JWT_SECRET)
   const user = await User.findOne({ accessKey: decodedAccessKey })
   if (!user)
     return response.status(403).json({ message: "Нет доступа!" })
