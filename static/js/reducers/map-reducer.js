@@ -11,6 +11,8 @@ const mapReducer = (state = mapInitialState, action) => {
                 center : [66.25, 94.15],
                 zoom : 3.5,
                 controls: []
+            }, {
+                restrictMapArea: [[84.83618, -178.9], [-73.87011, 181]]
             })
             
             ymaps.borders.load('RU').then(geojson => {
