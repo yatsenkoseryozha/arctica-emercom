@@ -23,7 +23,9 @@
               </div>
               <!-- MAP-OBJECTS -->
               <div class="map-objects-container">
-                <select id="map-categories-list" class="categories-list" disabled onchange="setCurrentCategory(this.options[this.selectedIndex].value)"></select>
+                <select id="map-categories-list" class="categories-list" disabled onchange="setCurrentCategory(this.options[this.selectedIndex].value)">
+                  <option style="display:none">Выберите категорию</option>
+                </select>
                 <select id="map-objects-list" class="objects-list" disabled onchange="setCurrentObject(this.options[this.selectedIndex].value)">
                   <option style="display:none">Выберите объект</option>
                 </select>
@@ -44,7 +46,9 @@
               </div>
               <!-- DB-CATEGORIES -->
               <div class="db-categories-container">
-                <select id="db-categories-list" class="categories-list" disabled onchange="setCurrentCategory(this.options[this.selectedIndex].value)"></select>
+                <select id="db-categories-list" class="categories-list" disabled onchange="setCurrentCategory(this.options[this.selectedIndex].value)">
+                  <option style="display:none">Выберите категорию</option>
+                </select>
                 <input id="new-category-name" type="text" placeholder="Название" style="display:none" />
                 <label id="new-category-icon-container" style="display:none" >
                   <input id="new-category-icon" type="file" placeholder="Иконка" style="display:none" onchange="setNewCategoryIcon()" />
