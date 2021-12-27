@@ -1,16 +1,27 @@
 store.subscribe(['SET-CATEGORIES', 'DELETE-CATEGORY'], (state) => {
+    let catgoriesGroups = []
+    state.toolbar.categories.map(category => {
+        let group = catgoriesGroups.find(group => group === category.group)
+        if (group == undefined) {
+            catgoriesGroups.push(category.group)
+        }
+    })
+
     let selects = document.getElementsByClassName('categories-list')
     for (let i = 0; i < selects.length; i++) {
-        let firstOption = document.createElement('option')
-        firstOption.style.display = 'none'
-        firstOption.innerHTML = 'Выберите категорию'
-        selects[i].innerHTML = ''
-        selects[i].append(firstOption)
-        state.toolbar.categories.map(category => {
-            let option = document.createElement('option')
-            option.className = 'categories-option'
-            option.innerHTML = category.name
-            selects[i].append(option)
+        catgoriesGroups.map(group => {
+            let optgroup = document.createElement('optgroup')
+            optgroup.className = 'categories-group'
+            optgroup.label = group
+            selects[i].append(optgroup)
+            state.toolbar.categories.map(category => {
+                if (category.group === group) {
+                    let option = document.createElement('option')
+                    option.className = 'categories-option'
+                    option.innerHTML = category.name
+                    selects[i].append(option)
+                }
+            })
         })
         selects[i].removeAttribute('disabled')
     }
